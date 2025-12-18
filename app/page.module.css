@@ -1,0 +1,212 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: #fafafa;
+}
+
+.content {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.intro {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.intro h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.intro p {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.5;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.textarea {
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #888;
+  background-color: #fafafa;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #555;
+  padding: 0.25rem 0;
+}
+
+.checkboxLabel input {
+  margin-top: 0.25rem;
+  cursor: pointer;
+}
+
+.checkboxLabel span {
+  line-height: 1.4;
+}
+
+.note {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #999;
+  line-height: 1.4;
+}
+
+.generateButton {
+  padding: 1rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.generateButton:hover:not(:disabled) {
+  background-color: #444;
+}
+
+.generateButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.output {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.draftContainer {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.draftText {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.outputActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.copyButton,
+.resetButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copyButton:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.resetButton:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .intro {
+    margin-bottom: 2rem;
+  }
+
+  .intro h1 {
+    font-size: 1.5rem;
+  }
+
+  .outputActions {
+    flex-direction: column;
+  }
+
+  .copyButton,
+  .resetButton {
+    width: 100%;
+  }
+}
