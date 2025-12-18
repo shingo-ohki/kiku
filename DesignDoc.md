@@ -623,7 +623,119 @@ KIKUは、
 
 ---
 
-## 15. 最後に
+## 15. API仕様
+
+本セクションは、  
+**KIKU v0.1 における生成機能の外部インターフェース仕様を固定する**。
+
+---
+
+### 15.1 設計方針（APIレベルで守ること）
+
+- mode（問いの入口）は API 内部で自動決定する  
+- ユーザーに mode を選ばせない  
+- 問いの入口を上げる方向のパラメータは持たない  
+- 入力は「状況」のみを受け取る  
+- 出力は常に「問いの下書き」とする  
+
+---
+
+### 15.2 エンドポイント
+
+POST /api/generate
+
+---
+
+### 15.3 リクエスト仕様
+
+```json
+{
+  "theme": "公共施設の使い方",
+  "background": "若い人の声があまり届いていないと感じる",
+  "unheard_contexts": [
+    "忙しくて参加できていない人",
+    "普段あまり行政と接点がない人"
+  ]
+}
+```
+
+`theme` と `background` は必須項目である。  
+`unheard_contexts` は任意項目であり、配列として受け取る。
+
+---
+
+### 15.4 mode 判定ロジック（固定）
+
+`mode` は、ユーザー入力から自動的に決定される内部状態である。
+外部から指定することはできない。
+
+判定は次のルールに従う。
+
+- `unheard_contexts` が 1 件以上存在する場合は `lowered_entry` を使用する
+- `unheard_contexts` が未指定、または空の場合は `default` を使用する
+
+```typescript
+const mode =
+  unheard_contexts && unheard_contexts.length > 0
+    ? "lowered_entry"
+    : "default"
+```
+
+設計上の意図は次の通りである。
+
+- ユーザーに「入口を下げるかどうか」を判断させない
+- `mode` は UI 上の分岐ではなく、生成思想上の分岐として扱う
+- 問いの入口を上げる方向の `mode` は存在しない
+- 迷った場合は、常により安全な方向である `default` を選択する
+
+この判定ロジックは、KIKU v0.1 において変更しない。
+
+---
+
+### 15.5 プロンプト組み立て順（固定）
+
+生成時のプロンプトは、必ず次の順序で組み立てる。
+
+1. 共通システムプロンプトを適用する
+2. `mode` に応じたプロンプトを適用する
+3. ユーザー入力をそのまま渡す
+
+この順序によって、生成結果は常に  
+**「思想 → 姿勢 → 文脈」**の順で制約される。
+
+---
+
+### 15.6 レスポンス仕様
+
+```json
+{
+  "mode": "lowered_entry",
+  "draft": "Markdown形式の問いの下書き全文"
+}
+```
+
+`draft` は、そのまま表示・コピー可能な Markdown テキストである。
+
+---
+
+### 15.7 型定義例（参考）
+
+```typescript
+type GenerateRequest = {
+  theme: string
+  background: string
+  unheard_contexts?: string[]
+}
+
+type GenerateResponse = {
+  mode: "default" | "lowered_entry"
+  draft: string
+}
+```
+
+---
+
+## 16. 最後に
 
 KIKUは、  
 意見を集めるためのアプリではない。
