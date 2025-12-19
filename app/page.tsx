@@ -6,6 +6,7 @@ import { UNHEARD_CONTEXT_OPTIONS } from "@/types"
 import styles from "./page.module.css"
 
 export default function Home() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
   const [theme, setTheme] = useState("")
   const [background, setBackground] = useState("")
   const [selectedContexts, setSelectedContexts] = useState<Set<UnheardContext>>(new Set())
@@ -35,7 +36,8 @@ export default function Home() {
         unheard_contexts: Array.from(selectedContexts),
       }
 
-      const response = await fetch("/api/generate", {
+      const endpoint = API_BASE_URL ? `${API_BASE_URL.replace(/\/$/, "")}/api/generate` : "/api/generate"
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
