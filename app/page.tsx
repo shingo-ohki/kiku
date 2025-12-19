@@ -107,11 +107,15 @@ export default function Home() {
           <section className={styles.form}>
             {/* 入力① テーマ */}
             <div className={styles.inputGroup}>
-              <label className={styles.label}>今、どんなことについて聞いてみたいですか？</label>
-              <p className={styles.hint}>（正式な言葉でなくて大丈夫です）</p>
+              <label className={styles.label}>
+                今回、住民の感じ方を聞こうとしている
+                <br />
+                事業・制度・テーマは何ですか？
+              </label>
+              <p className={styles.hint}>（正式名称でなくて構いません。そのまま書いてください）</p>
               <textarea
                 className={styles.textarea}
-                placeholder="例：公共施設の使われ方、子育て支援、まちの居心地"
+                placeholder="例：○○市立図書館の利用について、子育て支援制度全般、駅前再整備計画"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value)}
               />
