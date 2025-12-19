@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { GenerateRequest, UnheardContext } from "@/types"
+import type { GenerateRequest, UnheardContext, QuestionStructure } from "@/types"
 import { UNHEARD_CONTEXT_OPTIONS } from "@/types"
 import styles from "./page.module.css"
 
@@ -10,7 +10,7 @@ export default function Home() {
   const [background, setBackground] = useState("")
   const [selectedContexts, setSelectedContexts] = useState<Set<UnheardContext>>(new Set())
   const [isLoading, setIsLoading] = useState(false)
-  const [draft, setDraft] = useState<string | null>(null)
+  const [structure, setStructure] = useState<QuestionStructure | null>(null)
 
   const toggleContext = (context: UnheardContext) => {
     const newContexts = new Set(selectedContexts)
@@ -48,7 +48,7 @@ export default function Home() {
       }
 
       const data = await response.json()
-      setDraft(data.draft)
+      setStructure(data.structure)
     } catch (error) {
       console.error(error)
       alert("エラーが発生しました")
@@ -57,10 +57,35 @@ export default function Home() {
     }
   }
 
+  const generateCopyText = (structure: QuestionStructure): string => {
+    let text = `【問いの構造】\n${structure.explanation}\n\n`
+    text += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+
+    structure.questions.forEach((q) => {
+      text += `【問い${q.number}】${q.title}\n\n`
+      text += `${q.text}\n\n`
+
+      if (q.type === "choice" && q.options) {
+        q.options.forEach((opt) => {
+          text += `□ ${opt}\n`
+        })
+        text += "\n"
+      } else {
+        text += "［自由記述欄］\n\n"
+      }
+
+      text += "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    })
+
+    text += structure.note
+    return text
+  }
+
   const handleCopy = async () => {
-    if (!draft) return
+    if (!structure) return
     try {
-      await navigator.clipboard.writeText(draft)
+      const copyText = generateCopyText(structure)
+      await navigator.clipboard.writeText(copyText)
     } catch (error) {
       console.error(error)
     }
@@ -76,7 +101,7 @@ export default function Home() {
         </section>
 
         {/* 入力フォーム */}
-        {draft === null && (
+        {structure === null && (
           <section className={styles.form}>
             {/* 入力① テーマ */}
             <div className={styles.inputGroup}>
@@ -135,11 +160,40 @@ export default function Home() {
         )}
 
         {/* 出力結果 */}
-        {draft !== null && (
+        {structure !== null && (
           <section className={styles.output}>
             <div className={styles.draftContainer}>
-              <pre className={styles.draftText}>{draft}</pre>
+              <div className={styles.explanation}>
+                <h3>問いの構造</h3>
+                <p>{structure.explanation}</p>
+              </div>
+
+              {structure.questions.map((q) => (
+                <div key={q.number} className={styles.question}>
+                  <h4>
+                    問い{q.number}：{q.title}
+                  </h4>
+                  <p className={styles.questionText}>{q.text}</p>
+                  {q.type === "choice" && q.options && (
+                    <ul className={styles.options}>
+                      {q.options.map((opt, idx) => (
+                        <li key={idx}>{opt}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {q.type === "text" && (
+                    <div className={styles.textArea}>[自由記述欄]</div>
+                  )}
+                </div>
+              ))}
+
+              <div className={styles.note}>
+                {structure.note.split("\n").map((line, idx) => (
+                  <p key={idx}>{line}</p>
+                ))}
+              </div>
             </div>
+
             <div className={styles.outputActions}>
               <button className={styles.copyButton} onClick={handleCopy}>
                 コピーする
@@ -147,7 +201,7 @@ export default function Home() {
               <button
                 className={styles.resetButton}
                 onClick={() => {
-                  setDraft(null)
+                  setStructure(null)
                   setTheme("")
                   setBackground("")
                   setSelectedContexts(new Set())

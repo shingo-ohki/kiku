@@ -145,19 +145,100 @@
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 1.5rem;
+  padding: 2rem;
   margin-bottom: 1rem;
   overflow-x: auto;
 }
 
-.draftText {
-  margin: 0;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
+.explanation {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.explanation h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: #333;
-  white-space: pre-wrap;
-  word-break: break-word;
+}
+
+.explanation p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.question {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.question:last-of-type {
+  border-bottom: none;
+}
+
+.question h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.questionText {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  white-space: pre-line;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.options li {
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.options li::before {
+  content: '□';
+  position: absolute;
+  left: 0;
+  color: #999;
+}
+
+.textArea {
+  padding: 0.75rem;
+  background-color: #fafafa;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.note p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #999;
+  line-height: 1.5;
 }
 
 .outputActions {

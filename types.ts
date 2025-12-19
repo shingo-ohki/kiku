@@ -6,9 +6,23 @@ export type GenerateRequest = {
   unheard_contexts?: string[]
 }
 
+export type Question = {
+  number: number
+  title: string
+  text: string
+  type: "choice" | "text"
+  options?: string[] // type が "choice" の場合のみ
+}
+
+export type QuestionStructure = {
+  explanation: string
+  questions: Question[]
+  note: string
+}
+
 export type GenerateResponse = {
   mode: "default" | "lowered_entry"
-  draft: string
+  structure: QuestionStructure
 }
 
 // 声が届いていないと感じる人のオプション

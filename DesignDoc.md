@@ -602,16 +602,22 @@ KIKU v0.1 は「完成」とみなす。
 
 ### 13.5 出力フォーマット（固定）
 
-- 出力は Markdown テキストとする
+- 出力は構造化JSONとする
 - 構造は以下を必ず含む：
-  - 問いの構造説明
-  - 複数の設問（番号付き）
-  - 自由記述は最後・任意
+  - 問いの構造説明（explanation）
+  - 複数の設問（questions配列）
+    - 問いの番号、タイトル、本文
+    - 設問タイプ（choice / text）
+    - 選択肢（choice型の場合）
+  - 注意書き（note）
 
-- 出力には必ず以下を含める：
+- 注意書きには必ず以下を含める：
 
 > ※ この問いは、意見を評価するためのものではありません。  
 > 日常の感じ方を知るための下書きです。
+
+- v0.1では、デフォルトのテキスト形式（Google Formsに貼りやすい形式）のみ提供する
+- v0.2以降で複数の出力形式選択機能を追加する想定
 
 ---
 
@@ -839,11 +845,43 @@ const mode =
 ```json
 {
   "mode": "lowered_entry",
-  "draft": "Markdown形式の問いの下書き全文"
+  "structure": {
+    "explanation": "この問いは、日常の使われ方を思い出してもらう構成になっています。",
+    "questions": [
+      {
+        "number": 1,
+        "title": "思い出すための問い",
+        "text": "最近1年くらいで、市内の公共施設を利用したことはありますか？",
+        "type": "choice",
+        "options": [
+          "よく利用している",
+          "たまに利用している",
+          "ほとんど利用していない"
+        ]
+      },
+      {
+        "number": 2,
+        "title": "選びやすい問い",
+        "text": "利用したときの印象に、近いものがあれば選んでください（複数可）",
+        "type": "choice",
+        "options": [
+          "使いやすかった",
+          "なんとなく入りづらかった"
+        ]
+      },
+      {
+        "number": 3,
+        "title": "書けたら書ける問い（任意）",
+        "text": "もしよければ、「こうだったら、もう少し使うかも」と思うことがあれば自由に書いてください。\n（書かなくても大丈夫です）",
+        "type": "text"
+      }
+    ],
+    "note": "※ この問いは、意見を評価するためのものではありません。\n日常の感じ方を知るための下書きです。"
+  }
 }
 ```
 
-`draft` は、そのまま表示・コピー可能な Markdown テキストである。
+`structure` は構造化されたデータであり、フロントエンドで表示形式とコピー形式を柔軟に生成できる。
 
 ---
 
@@ -856,9 +894,23 @@ type GenerateRequest = {
   unheard_contexts?: string[]
 }
 
+type Question = {
+  number: number
+  title: string
+  text: string
+  type: "choice" | "text"
+  options?: string[] // type が "choice" の場合のみ
+}
+
+type QuestionStructure = {
+  explanation: string
+  questions: Question[]
+  note: string
+}
+
 type GenerateResponse = {
   mode: "default" | "lowered_entry"
-  draft: string
+  structure: QuestionStructure
 }
 ```
 
